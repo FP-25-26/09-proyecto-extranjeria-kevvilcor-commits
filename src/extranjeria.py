@@ -12,8 +12,9 @@ RegistroExtranjeria = NamedTuple(
             ]
 )
 
+#EJERCICIO 1:
 
-def lee_datos_extranjeria(ruta_fichero):
+def lee_datos_extranjeria(ruta_fichero: csv)->list[RegistroExtranjeria]:
     res = []
     with open(ruta_fichero, encoding="utf-8") as f:
         lector = csv.reader(f)
@@ -24,14 +25,22 @@ def lee_datos_extranjeria(ruta_fichero):
     return res
 
 
-def numero_nacionalidades_distintas(registros):
+#EJERCICIO 2:
+
+def numero_nacionalidades_distintas(registros:RegistroExtranjeria)->int:
     nacionalidades = set()
     for a in registros:
         nacionalidades.add(a.pais)
     return len(nacionalidades)
 
+def numero_nacionalidades_distintas_2(registros:RegistroExtranjeria)->int:
+    nacionalidades = set(a.pais for a in registros)
+    return len(nacionalidades)
 
-def secciones_distritos_con_extranjeros_nacionalidades(registros, paises):
+
+#EJERCICIO 3:
+
+def secciones_distritos_con_extranjeros_nacionalidades(registros:RegistroExtranjeria, paises:{str})->list:
     res = []
     paises = {p.lower() for p in paises}
     for a in registros:
@@ -39,8 +48,15 @@ def secciones_distritos_con_extranjeros_nacionalidades(registros, paises):
             res.append((a.distrito,a.seccion))
     return sorted(res)
 
+def secciones_distritos_con_extranjeros_nacionalidades_2(registros:RegistroExtranjeria, paises:{str})->list[str,str]:
+    paises = {p.lower() for p in paises}
+    res = [(a.distrito,a.sesccion) for a in registros if a.pais.lower() in paises]
+    return sorted(res)
 
-def total_extranjeros_por_pais(registros):
+
+#EJERCICIO 4:
+
+def total_extranjeros_por_pais(registros:RegistroExtranjeria)->dict[str:int]:
     res = dict()
     for a in registros:
         if a.pais in res:
@@ -50,7 +66,9 @@ def total_extranjeros_por_pais(registros):
     return res
 
 
-def top_n_extranjeria(registros, n=3):
+#EJERCICIO 5:
+
+def top_n_extranjeria(registros:RegistroExtranjeria, n:int)->list[str,int]:
     res = dict()
     for a in registros:
         if a.pais in res:
@@ -60,20 +78,42 @@ def top_n_extranjeria(registros, n=3):
     res_ord = sorted(res.items(), key=lambda r:r[1], reverse=True)
     return res_ord[:n]
 
+def top_n_extranjeria_2(registros:RegistroExtranjeria, n:int)->list[str,int]:
+    res = total_extranjeros_por_pais(registros)
+    res_ord = sorted(res.items(), key=lambda r:r[1], reverse=True)
+    return res_ord[:n]
 
-def barrio_mas_multicultural(registros):
+
+#EJERCICIO 6:
+
+def total_extranjeros_por_barrio(registros:RegistroExtranjeria)->dict[str:int]:
+    barrios = dict()
+    for a in registros:
+        if a.barrio in barrios:
+            barrios[a.barrio] += (a.hombres + a.mujeres)
+        else:
+            barrios[a.barrio] = (a.hombres + a.mujeres)
+    return barrios
+
+def barrio_mas_multicultural(registros:RegistroExtranjeria)->dict[str:int]:
     barrios = dict()
     for a in registros:
         if a.barrio in barrios:
             barrios[a.barrio] += a.hombres + a.mujeres
         else:
             barrios[a.barrio] = a.hombres + a.mujeres
-    # res = sorted(barrios.items(), key=lambda b:b[1], reverse=True)
-    # return res[0]
-    return max(barrios, key=barrios.get)
+    res = max(barrios, key=barrios.get)
+    return res
+    
+def barrio_mas_multicultural_2(registros:RegistroExtranjeria)->dict[str:int]:
+    barrios = total_extranjeros_por_barrio(registros)
+    res = max(barrios, key=barrios.get)
+    return res
 
 
-def barrio_con_mas_extranjeros(registros, tipo=None):
+#EJERCICIO 7:
+
+def barrio_con_mas_extranjeros(registros:RegistroExtranjeria, tipo:str|None)->dict[str:str]:
     barrios = dict()
     
     for a in registros:
@@ -94,6 +134,8 @@ def barrio_con_mas_extranjeros(registros, tipo=None):
                 barrios[a.barrio] = a.mujeres
     return max(barrios, key=barrios.get)
 
+
+#EJERCICIO 8
 
 def pais_mas_representado_por_distrito(registros):
     res = dict()
