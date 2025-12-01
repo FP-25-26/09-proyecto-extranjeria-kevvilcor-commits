@@ -138,6 +138,23 @@ def barrio_con_mas_extranjeros(registros:RegistroExtranjeria, tipo:str|None)->di
 #EJERCICIO 8
 
 def pais_mas_representado_por_distrito(registros):
+    d = dict()
+    for r in registros:
+        distrito = r.distrito
+        pais = r.pais
+        total = r.hombres + r.mujeres
+        if distrito in d:
+            if pais in d[distrito]:
+                d[distrito][pais]+=total
+            else:
+                d[distrito][pais]=total
+        else:
+            d[distrito]={pais:total}
     res = dict()
-    for a in registros:
-        pass
+    for dis, ps in d.items():
+        pais_max = max(ps, key = ps.get)
+        res[dis] = pais_max
+
+    return res
+
+     

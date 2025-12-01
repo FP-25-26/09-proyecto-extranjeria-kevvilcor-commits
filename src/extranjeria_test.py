@@ -52,7 +52,9 @@ def test_barrio_con_mas_extranjeros(registros, tipo):
         print(f"El barrio con más mujeres residentes extranjeros es: {extr}")
         
     
-
+def test_pais_mas_representado_por_distrito(registros):
+    distr = pais_mas_representado_por_distrito(registros)
+    print(f"\n{distr}")
 
 
 
@@ -84,7 +86,7 @@ def main():
 
     print("")
     print("#"*70)
-
+    test_pais_mas_representado_por_distrito(registros)
 
 if __name__ == "__main__":
     main()
